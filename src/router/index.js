@@ -46,28 +46,28 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
+        component: (resolve) => require(['@/views/redirect/index'], resolve)
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: (resolve) => require(['@/views/login/index'], resolve),
     hidden: true
   },
   {
     path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
+    component: (resolve) => require(['@/views/login/auth-redirect'], resolve),
     hidden: true
   },
   {
     path: '/404',
-    component: () => import('@/views/error-page/404'),
+    component: (resolve) => require(['@/views/error-page/404'], resolve),
     hidden: true
   },
   {
     path: '/401',
-    component: () => import('@/views/error-page/401'),
+    component: (resolve) => require(['@/views/error-page/401'], resolve),
     hidden: true
   },
   {
@@ -77,7 +77,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: (resolve) => require(['@/views/dashboard/index'], resolve),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
       }
@@ -89,7 +89,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/documentation/index'),
+        component: (resolve) => require(['@/views/documentation/index'], resolve),
         name: 'Documentation',
         meta: { title: 'Documentation', icon: 'documentation', affix: true }
       }
@@ -102,7 +102,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/guide/index'),
+        component: (resolve) => require(['@/views/guide/index'], resolve),
         name: 'Guide',
         meta: { title: 'Guide', icon: 'guide', noCache: true }
       }
@@ -116,7 +116,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/profile/index'),
+        component: (resolve) => require(['@/views/profile/index'], resolve),
         name: 'Profile',
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
@@ -143,7 +143,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'page',
-        component: () => import('@/views/permission/page'),
+        component: (resolve) => require(['@/views/permission/page'], resolve),
         name: 'PagePermission',
         meta: {
           title: 'Page Permission',
@@ -152,7 +152,7 @@ export const asyncRoutes = [
       },
       {
         path: 'directive',
-        component: () => import('@/views/permission/directive'),
+        component: (resolve) => require(['@/views/permission/directive'], resolve),
         name: 'DirectivePermission',
         meta: {
           title: 'Directive Permission'
@@ -161,7 +161,7 @@ export const asyncRoutes = [
       },
       {
         path: 'role',
-        component: () => import('@/views/permission/role'),
+        component: (resolve) => require(['@/views/permission/role'], resolve),
         name: 'RolePermission',
         meta: {
           title: 'Role Permission',
@@ -177,7 +177,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/icons/index'),
+        component: (resolve) => require(['@/views/icons/index'], resolve),
         name: 'Icons',
         meta: { title: 'Icons', icon: 'icon', noCache: true }
       }
@@ -202,20 +202,20 @@ export const asyncRoutes = [
     children: [
       {
         path: 'create',
-        component: () => import('@/views/example/create'),
+        component: (resolve) => require(['@/views/example/create'], resolve),
         name: 'CreateArticle',
         meta: { title: 'Create Article', icon: 'edit' }
       },
       {
         path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
+        component: (resolve) => require(['@/views/example/edit'], resolve),
         name: 'EditArticle',
         meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
         hidden: true
       },
       {
         path: 'list',
-        component: () => import('@/views/example/list'),
+        component: (resolve) => require(['@/views/example/list'], resolve),
         name: 'ArticleList',
         meta: { title: 'Article List', icon: 'list' }
       }
@@ -228,7 +228,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/tab/index'),
+        component: (resolve) => require(['@/views/tab/index'], resolve),
         name: 'Tab',
         meta: { title: 'Tab', icon: 'tab' }
       }
@@ -247,13 +247,13 @@ export const asyncRoutes = [
     children: [
       {
         path: '401',
-        component: () => import('@/views/error-page/401'),
+        component: (resolve) => require(['@/views/error-page/401'], resolve),
         name: 'Page401',
         meta: { title: '401', noCache: true }
       },
       {
         path: '404',
-        component: () => import('@/views/error-page/404'),
+        component: (resolve) => require(['@/views/error-page/404'], resolve),
         name: 'Page404',
         meta: { title: '404', noCache: true }
       }
@@ -266,7 +266,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'log',
-        component: () => import('@/views/error-log/index'),
+        component: (resolve) => require(['@/views/error-log/index'], resolve),
         name: 'ErrorLog',
         meta: { title: 'Error Log', icon: 'bug' }
       }
@@ -285,25 +285,25 @@ export const asyncRoutes = [
     children: [
       {
         path: 'export-excel',
-        component: () => import('@/views/excel/export-excel'),
+        component: (resolve) => require(['@/views/excel/export-excel'], resolve),
         name: 'ExportExcel',
         meta: { title: 'Export Excel' }
       },
       {
         path: 'export-selected-excel',
-        component: () => import('@/views/excel/select-excel'),
+        component: (resolve) => require(['@/views/excel/select-excel'], resolve),
         name: 'SelectExcel',
         meta: { title: 'Export Selected' }
       },
       {
         path: 'export-merge-header',
-        component: () => import('@/views/excel/merge-header'),
+        component: (resolve) => require(['@/views/excel/merge-header'], resolve),
         name: 'MergeHeader',
         meta: { title: 'Merge Header' }
       },
       {
         path: 'upload-excel',
-        component: () => import('@/views/excel/upload-excel'),
+        component: (resolve) => require(['@/views/excel/upload-excel'], resolve),
         name: 'UploadExcel',
         meta: { title: 'Upload Excel' }
       }
@@ -320,7 +320,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'download',
-        component: () => import('@/views/zip/index'),
+        component: (resolve) => require(['@/views/zip/index'], resolve),
         name: 'ExportZip',
         meta: { title: 'Export Zip' }
       }
@@ -334,7 +334,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/pdf/index'),
+        component: (resolve) => require(['@/views/pdf/index'], resolve),
         name: 'PDF',
         meta: { title: 'PDF', icon: 'pdf' }
       }
@@ -342,7 +342,7 @@ export const asyncRoutes = [
   },
   {
     path: '/pdf/download',
-    component: () => import('@/views/pdf/download'),
+    component: (resolve) => require(['@/views/pdf/download'], resolve),
     hidden: true
   },
 
@@ -352,7 +352,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/theme/index'),
+        component: (resolve) => require(['@/views/theme/index'], resolve),
         name: 'Theme',
         meta: { title: 'Theme', icon: 'theme' }
       }
@@ -365,7 +365,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/clipboard/index'),
+        component: (resolve) => require(['@/views/clipboard/index'], resolve),
         name: 'ClipboardDemo',
         meta: { title: 'Clipboard', icon: 'clipboard' }
       }
