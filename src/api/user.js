@@ -2,17 +2,16 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: '/login/admin',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+export function getInfo(id) {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: `/users/${id}`,
+    method: 'get'
   })
 }
 

@@ -1,0 +1,6 @@
+export const tokenKey = '_this_is_none_of_your_business_'
+export const authKey = 'Authorization'
+export const bearer = 'Bearer'
+export const csrfKey = 'x-csrf-token'
+export const baseURL = '/api'
+export const BASEHOST = 'http://127.0.0.1:7001'
