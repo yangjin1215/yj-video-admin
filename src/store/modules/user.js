@@ -8,7 +8,8 @@ const state = {
   id: '',
   usertype: '',
   collection: [],
-  roles: []
+  roles: [],
+  avatar: ''
 }
 
 const mutations = {
@@ -29,6 +30,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_AVATAR: (state, avatar) => {
+    state.avatar = avatar
   }
 }
 
@@ -59,6 +63,7 @@ const actions = {
         commit('SET_USERTYPE', usertype)
         commit('SET_ROLES', [usertype])
         commit('SET_COLLECTION', collection)
+        commit('SET_AVATAR', '/img/avatar.svg')
         resolve({
           ...resdata,
           roles: [usertype]
