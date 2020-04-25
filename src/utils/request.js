@@ -5,6 +5,9 @@ import store from '@/store'
 import { baseURL, authKey, bearer, csrfKey } from '@/utils/config'
 import { getToken } from '@/utils/auth'
 
+const csrfToken = Cookies.get('csrfToken')
+if (!csrfToken) { axios.get('/') }
+
 // create an axios instance
 const service = axios.create({
   baseURL: baseURL, // url = base url + request url
@@ -16,7 +19,8 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers[csrfKey] = Cookies.get('csrfToken')
+
+    config.headers[csrfKey] = csrfToken || Cookies.get('csrfToken')
     const token = getToken()
     if (!config.url.includes('/login') && token) {
       config.headers[authKey] = `${bearer} ${token}`
