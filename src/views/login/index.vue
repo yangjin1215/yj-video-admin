@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <img src="http://127.0.0.1:7001/public/img/logo.png" width="100">
+        <img src="/api/public/img/logo.png" width="100">
         <h3 class="title">猿学网后台管理系统</h3>
       </div>
 
