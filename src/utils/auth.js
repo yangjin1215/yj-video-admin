@@ -10,5 +10,6 @@ export function setToken(token) {
 }
 
 export function removeToken() {
+  Cookies.remove('csrfToken')
   return Cookies.remove(tokenKey)
 }

@@ -1,5 +1,6 @@
 module.exports = {
   title: '猿学网后台管理系统',
+  baseHost: 'http://127.0.0.1:7001',
 
   /**
    * @type {boolean} true | false

@@ -15,9 +15,26 @@ export function getInfo(id) {
   })
 }
 
-export function logout() {
+export const getUsers = ({ limit, offset }) => {
+  const data = { limit, offset }
+  const queryString = Object.keys(data).reduce((t, k, ci, arr) => `${t}${data[k] ? `${k}=${data[k]}${ci === arr.length - 1 ? '' : '&'}` : ''}`, '')
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+    url: `/getusers/?${queryString}`,
+    method: 'get'
+  })
+}
+
+export const registerUser = ({ username, password }) => {
+  return request({
+    url: '/users',
+    method: 'post',
+    data: { username, password }
+  })
+}
+
+export const delUser = (id) => {
+  return request({
+    url: `/users/${id}`,
+    method: 'delete'
   })
 }
