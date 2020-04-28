@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -71,6 +72,7 @@ export default {
       }
     }
     return {
+      hello: '',
       loginForm: {
         username: '',
         password: ''
@@ -98,7 +100,8 @@ export default {
       immediate: true
     }
   },
-  created() {
+  async created() {
+    this.hello = await axios.get('/api')
   },
   mounted() {
     if (this.loginForm.username === '') {

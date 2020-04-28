@@ -1,20 +1,34 @@
 <template>
   <div>
-    <common :config="config" />
+    <commonJSX
+      :config="config"
+      :no-pagination="true"
+      :dialog-entiy="dialogEntiy"
+    >
+      <template v-slot:dialogAdd>
+        <banner />
+      </template>
+      <template v-slot:dialogEdit="{ row }">
+        {{ row }}
+      </template>
+    </commonJSX>
   </div>
 </template>
 
 <script>
-import common from './components/common.vue'
+import commonJSX from './components/commonJSX.vue'
+import banner from './components/banners/add.vue'
 import { getBanner, delBanner } from '@/api/banner'
 
 export default {
   name: 'BannerManage',
   components: {
-    common
+    commonJSX,
+    banner
   },
   data() {
     return {
+      dialogEntiy: '头图',
       config: {
         addBtn: {
           text: '添加头图',
@@ -27,7 +41,15 @@ export default {
             label: '头图',
             sort: 1,
             width: '200',
-            render: row => `<img src="${row.imgurl}" width="150" />`
+            render: (row, list) => (
+              <el-image
+                style='width: 150px;'
+                fit='cover'
+                src={row.imgurl}
+                preview-src-list={list.map(e => e.imgurl)}
+              >
+              </el-image>
+            )
           },
           { prop: 'title', label: '头图标题', width: '200', fixed: false, sort: 2 },
           { prop: 'video.videoname', label: '视频标题', fixed: false, sort: 3 },
