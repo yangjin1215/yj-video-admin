@@ -6,7 +6,7 @@
       :dialog-entiy="dialogEntiy"
     >
       <template v-slot:dialogAdd>
-        <banner />
+        <banner v-model="bannerInfo" />
       </template>
       <template v-slot:dialogEdit="{ row }">
         {{ row }}
@@ -28,12 +28,32 @@ export default {
   },
   data() {
     return {
-      dialogEntiy: '头图',
-      config: {
+      bannerInfo: {},
+      dialogEntiy: '头图'
+    }
+  },
+  computed: {
+    config() {
+      return {
         addBtn: {
           text: '添加头图',
-          async addClick() {
-            return await true
+          addClick: async() => {
+            const { title = '', video = {}, imgurl = '' } = this.bannerInfo
+            const status = this.isEmpty([
+              {
+                value: title,
+                title: '头图标题'
+              },
+              {
+                value: video,
+                title: '关联视频'
+              },
+              {
+                value: imgurl,
+                title: '头图文件'
+              }
+            ])
+            return await status
           }
         },
         columns: [
@@ -66,6 +86,20 @@ export default {
           return await row
         }
       }
+    }
+  },
+  methods: {
+    isEmpty(array) {
+      for (const items of array) {
+        if (!items.value || items.title === '关联视频' && !items.value.videoid) {
+          this.$message({
+            type: 'warning',
+            message: `${items.title}不能为空`
+          })
+          return false
+        }
+      }
+      return true
     }
   }
 }

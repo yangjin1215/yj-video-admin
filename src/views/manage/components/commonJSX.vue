@@ -87,11 +87,13 @@ export default {
         : this.type === 'edit'
           ? editClick : Promise.resolve(true)
       return p()
-        .then(() => {
+        .then(rs => {
           this.$emit('on-ok', this.currentRows)
+          return rs
         })
-        .then(() => {
-          this.dialogFormVisible = false
+        .then(rs => {
+          // rs 为校验结果，true 为通过，关闭 dialog， false 为不通过，不关闭 dialog
+          this.dialogFormVisible = !rs
         })
     },
     onChange(current) {
