@@ -36,23 +36,26 @@
         :data="postData"
         :action="action"
         list-type="picture-card"
+        :file-list="files"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :on-success="success"
+        :limit="1"
         with-credentials
       >
         <i class="el-icon-plus" />
       </el-upload>
     </div>
-    <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
+    <el-dialog :visible.sync="dialogVisible" append-to-body>
+      <img width="100%" :src="dialogImageUrl" alt="预览">
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { search } from '@/api/banner'
-import { authKey, bearer, csrfKey } from '@/utils/config'
+import { delfile } from '@/api/file'
+import { authKey, bearer, csrfKey, BASEHOST } from '@/utils/config'
 import { getToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
 export default {
@@ -60,10 +63,23 @@ export default {
     value: {
       type: Object,
       required: true
+    },
+    defaultValue: {
+      type: Object,
+      required: false,
+      default: () => ({
+        title: '',
+        video: {
+          videoid: '',
+          videotypeid: ''
+        },
+        imgurl: ''
+      })
     }
   },
   data() {
     return {
+      files: [],
       loading: false,
       action: '/api/upload',
       dialogImageUrl: '',
@@ -94,6 +110,26 @@ export default {
       deep: true
     }
   },
+  mounted() {
+    this.bannerData = {
+      title: this.defaultValue.title,
+      video: {
+        videoid: this.defaultValue.videoid,
+        videotypeid: this.defaultValue.videotypeid
+      },
+      imgurl: this.defaultValue.imgurl ? this.defaultValue.imgurl.replace(new RegExp(`${BASEHOST}`), '') : ''
+    }
+    this.VideoOptions = [{
+      ...this.defaultValue.video,
+      videotype: {
+        id: this.defaultValue.video.videotypeid
+      }
+    }]
+    this.files = this.defaultValue.imgurl ? [{
+      type: 'banner',
+      url: this.defaultValue.imgurl
+    }] : []
+  },
   methods: {
     async remoteMethod(query) {
       if (query !== '') {
@@ -111,8 +147,16 @@ export default {
         this.bannerData.imgurl = resdata.url
       }
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
+    async handleRemove(file, fileList) {
+      const url = file.response ? file.response.resdata.httpurl : file.url
+      const { status } = await delfile(url)
+      if (status) {
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+        this.bannerData.imgurl = ''
+      }
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url

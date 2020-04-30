@@ -86,12 +86,15 @@ export default {
         ? addBtn.addClick
         : this.type === 'edit'
           ? editClick : Promise.resolve(true)
-      return p()
+      return p(this.currentRows)
         .then(rs => {
           this.$emit('on-ok', this.currentRows)
           return rs
         })
         .then(rs => {
+          if (rs) { this.getList() }
+          // 添加 或者 修改成功后 刷新列表
+
           // rs 为校验结果，true 为通过，关闭 dialog， false 为不通过，不关闭 dialog
           this.dialogFormVisible = !rs
         })
@@ -168,7 +171,7 @@ export default {
       }
     },
     isloadingOrTable() {
-      if (this.laoding && this.list.length === 0) {
+      if (this.laoding) {
         return (
           <div class='loading'>
             <i class='el-icon-loading' />
