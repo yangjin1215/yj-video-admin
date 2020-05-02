@@ -23,7 +23,7 @@
       >
         <el-option
           v-for="item in VideoOptions"
-          :key="item.value"
+          :key="item.id"
           :label="item.videoname"
           :value="{ videoid: item.id, videotypeid: item.videotype.id }"
         />
@@ -35,12 +35,14 @@
         :headers="headers"
         :data="postData"
         :action="action"
+        accept="image/*"
         list-type="picture-card"
         :file-list="files"
         :on-preview="handlePictureCardPreview"
         :on-remove="handleRemove"
         :on-success="success"
         :limit="1"
+        :before-upload="beforeUpload"
         with-credentials
       >
         <i class="el-icon-plus" />
@@ -59,6 +61,7 @@ import { authKey, bearer, csrfKey, BASEHOST } from '@/utils/config'
 import { getToken } from '@/utils/auth'
 import Cookies from 'js-cookie'
 export default {
+  name: 'Banners',
   props: {
     value: {
       type: Object,
@@ -131,6 +134,23 @@ export default {
     }] : []
   },
   methods: {
+    beforeUpload(file) {
+      if (!file.type.includes('image')) {
+        this.$message({
+          type: 'warning',
+          message: '只能上传图片类型的文件'
+        })
+        return false
+      }
+      if (file.size > 5 * (1204 ** 2)) {
+        this.$message({
+          type: 'warning',
+          message: '文件大小不能超过5MB'
+        })
+        return false
+      }
+      return true
+    },
     async remoteMethod(query) {
       if (query !== '') {
         this.loading = true
@@ -149,6 +169,7 @@ export default {
     },
     async handleRemove(file, fileList) {
       const url = file.response ? file.response.resdata.httpurl : file.url
+      if (!url || url.startsWith('blob:')) return
       const { status } = await delfile(url)
       if (status) {
         this.$message({
