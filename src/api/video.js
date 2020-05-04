@@ -36,11 +36,26 @@ export function addVideo({
   })
 }
 
-export function updateVideo({ id, videoname, videotypeid, videocover }) {
+export function updateVideo({
+  id,
+  videoname,
+  videourl,
+  videotypeid,
+  videocover,
+  videotime,
+  videosize
+}) {
   return request({
     url: `/videos/${id}`,
     method: 'patch',
-    data: { videoname, videotypeid, videocover }
+    data: {
+      videoname,
+      videourl,
+      videotypeid,
+      videocover,
+      videotime,
+      videosize
+    }
   })
 }
 
