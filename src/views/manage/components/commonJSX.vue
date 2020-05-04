@@ -15,24 +15,13 @@ export default {
       default: () => ({
         addBtn: {
           text: '添加用户',
-          async addClick() {
-            return await true
-          }
+          async addClick() {}
         },
-        columns: [
-          { prop: 'id', label: '用户id', width: '150', fixed: false },
-          { prop: 'username', label: '用户名', width: '200', fixed: false },
-          { prop: 'created_time', label: '注册时间', fixed: false }
-        ],
-        async getList(options) {
-          return await []
-        },
-        async delRow(id) {
-          return await true
-        },
-        async editClick(row) {
-          return await row
-        }
+        columns: [],
+        queryParams: {},
+        async getList(options) {},
+        async delRow(id) {},
+        async editClick(row) {}
       })
     }
   },
@@ -40,7 +29,9 @@ export default {
     return {
       type: 'add',
       currentRows: {},
-      loading: false,
+      serviceLoading: {},
+      loading: true,
+      btnloading: false,
       dialogFormVisible: false,
       list: [],
       pages: {
@@ -86,12 +77,17 @@ export default {
         ? addBtn.addClick
         : this.type === 'edit'
           ? editClick : Promise.resolve(true)
-      return p()
+      this.btnloading = true
+      return p(this.currentRows)
         .then(rs => {
           this.$emit('on-ok', this.currentRows)
+          this.btnloading = false
           return rs
         })
         .then(rs => {
+          if (rs) { this.getList() }
+          // 添加 或者 修改成功后 刷新列表
+
           // rs 为校验结果，true 为通过，关闭 dialog， false 为不通过，不关闭 dialog
           this.dialogFormVisible = !rs
         })
@@ -108,7 +104,8 @@ export default {
       const offset = this.pages.currentPage - 1 < 0 ? 0 : (this.pages.currentPage - 1) * this.pages.pageSize
       const list = await this.config.getList(this.noPagination ? undefined : {
         offset: offset === 0 ? '0' : offset,
-        limit: this.pages.pageSize
+        limit: this.pages.pageSize,
+        ...this.config.queryParams
       })
       this.pages.total = list.count
       this.list = this.handleRes(list) || []
@@ -123,15 +120,22 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.serviceLoading = this.$loading({
+          lock: true,
+          text: '正在删除中...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
         return this.config.delRow(row.id)
       }).then(rs => {
-        if (rs) {
+        if (rs && rs.status) {
           this.$message({
             type: 'successs',
             message: '删除成功'
           })
           this.getList()
         }
+        this.serviceLoading.close()
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -143,22 +147,23 @@ export default {
       if (item.render) {
         return (
           <el-table-column
-            key={item.sort.toString() || i.toString()}
+            key={item.sort ? item.sort.toString() : i.toString()}
             align='center'
             fixed={item.fixed}
             label={item.label}
             width={item.width}
           >
             {
-              scope => item.render(scope.row, this.list)
+              scope => item.render(scope.row, this.list, i)
             }
           </el-table-column>
         )
       } else {
         return (
           <el-table-column
-            key={item.sort.toString() || i.toString()}
+            key={item.sort ? item.sort.toString() : i.toString()}
             align='center'
+            type={item.type}
             prop={item.prop}
             fixed={item.fixed}
             label={item.label}
@@ -167,8 +172,31 @@ export default {
         )
       }
     },
+    isDialog() {
+      if (this.dialogFormVisible) {
+        return (
+          <el-dialog
+            title={this.dialogTitle}
+            append-to-body
+            destroy-on-close
+            close-on-click-modal={false}
+            visible={this.dialogFormVisible}
+            {...{ on: { 'update:visible': rs => { this.dialogFormVisible = rs } }} }
+          >
+            {this.isDialogSlot()}
+            <div slot='footer' class='dialog-footer'>
+              <el-button disabled={this.btnloading} onClick={() => { this.dialogFormVisible = false }}>取 消</el-button>
+              <el-button type='primary' disabled={this.btnloading} onClick={() => this.ok()}>
+                { this.btnloading ? '正在执行中...' : '确定' }
+              </el-button>
+            </div>
+          </el-dialog>
+        )
+      }
+      return null
+    },
     isloadingOrTable() {
-      if (this.laoding && this.list.length === 0) {
+      if (this.loading) {
         return (
           <div class='loading'>
             <i class='el-icon-loading' />
@@ -226,28 +254,7 @@ export default {
           </div>
         )
       }
-    },
-    isDialog() {
-      if (this.dialogFormVisible) {
-        return (
-          <el-dialog
-            title={this.dialogTitle}
-            append-to-body
-            destroy-on-close
-            close-on-click-modal={false}
-            visible={this.dialogFormVisible}
-            {...{ on: { 'update:visible': rs => { this.dialogFormVisible = rs } }} }
-          >
-            {this.isDialogSlot()}
-            <div slot='footer' class='dialog-footer'>
-              <el-button onClick={() => { this.dialogFormVisible = false }}>取 消</el-button>
-              <el-button type='primary' disabled={this.loading} onClick={() => this.ok()}>
-                { this.loading ? '正在执行中...' : '确定' }
-              </el-button>
-            </div>
-          </el-dialog>
-        )
-      }
+      return null
     },
     isPagination() {
       if (!this.noPagination) {
@@ -262,6 +269,7 @@ export default {
           />
         )
       }
+      return null
     }
   },
   render() {

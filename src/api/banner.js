@@ -7,6 +7,22 @@ export const getBanner = () => {
   })
 }
 
+export const addBanner = ({ title, videoid, imgurl, videotypeid }) => {
+  return request({
+    url: '/banners',
+    method: 'post',
+    data: { title, videoid, imgurl, videotypeid }
+  })
+}
+
+export const updateBanner = ({ id, title, videoid, videotypeid, imgurl }) => {
+  return request({
+    url: `/banners/${id}`,
+    method: 'patch',
+    data: { title, videoid, imgurl, videotypeid }
+  })
+}
+
 export const delBanner = (id) => {
   return request({
     url: `/banners/${id}`,

@@ -9,7 +9,7 @@
         <banner v-model="bannerInfo" />
       </template>
       <template v-slot:dialogEdit="{ row }">
-        {{ row }}
+        <banner v-model="bannerInfo" :default-value="row" />
       </template>
     </commonJSX>
   </div>
@@ -18,7 +18,7 @@
 <script>
 import commonJSX from './components/commonJSX.vue'
 import banner from './components/banners/add.vue'
-import { getBanner, delBanner } from '@/api/banner'
+import { getBanner, delBanner, addBanner, updateBanner } from '@/api/banner'
 
 export default {
   name: 'BannerManage',
@@ -53,7 +53,16 @@ export default {
                 title: '头图文件'
               }
             ])
-            return await status
+            if (status) {
+              const { videoid, videotypeid } = video
+              const rs = await addBanner({ title, videoid, imgurl, videotypeid })
+              this.$message({
+                type: rs.status ? 'success' : 'error',
+                message: rs.status ? '添加成功' : '添加失败'
+              })
+              return rs.status
+            }
+            return false
           }
         },
         columns: [
@@ -82,8 +91,32 @@ export default {
         async delRow(id) {
           return await delBanner(id)
         },
-        async editClick(row) {
-          return await row
+        editClick: async(row) => {
+          const { title = '', video = {}, imgurl = '' } = this.bannerInfo
+          const is = this.isEmpty([
+            {
+              value: title,
+              title: '头图标题'
+            },
+            {
+              value: video,
+              title: '关联视频'
+            },
+            {
+              value: imgurl,
+              title: '头图文件'
+            }
+          ])
+          if (is) {
+            const { videoid, videotypeid } = video
+            const { status } = await updateBanner({ id: row.id, title, videoid, imgurl, videotypeid })
+            this.$message({
+              type: status ? 'success' : 'error',
+              message: status ? '修改成功' : '修改失败'
+            })
+            return status
+          }
+          return false
         }
       }
     }
