@@ -36,6 +36,11 @@ export function addVideo({
   })
 }
 
+export const delComment = id => request({
+  url: `/comments/${id}`,
+  method: 'delete'
+})
+
 export function updateVideo({
   id,
   videoname,

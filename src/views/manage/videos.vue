@@ -10,14 +10,34 @@
       <template v-slot:dialogEdit="{ row }">
         <videoComponent v-model="video" :default-value="row" />
       </template>
+      <template v-slot:rowsBtn="{ row }">
+        <el-button size="small" type="text" @click="seeComment(row)">查看评论</el-button>
+      </template>
     </commonJSX>
+    <el-dialog title="视频评论" fullscreen :visible.sync="commentShow" @closed="closeComment">
+      <el-table :data="comments">
+        <el-table-column property="content" label="评论内容" />
+        <el-table-column property="user.username" label="用户名称" width="100" />
+        <el-table-column property="created_time" label="评论时间" width="200" />
+        <el-table-column
+          align="center"
+          fixed="right"
+          label="操作"
+          width="100"
+        >
+          <template slot-scope="{ row }">
+            <el-button type="text" size="small" style="color:red;" @click="delComment(row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import commonJSX from './components/commonJSX.vue'
 import videoComponent from './components/videos/index.vue'
-import { getVideos, addVideo, updateVideo, delVideos, search } from '@/api/video'
+import { getVideos, addVideo, updateVideo, delVideos, search, delComment } from '@/api/video'
 
 export default {
   name: 'VideoManage',
@@ -27,6 +47,8 @@ export default {
   },
   data() {
     return {
+      commentShow: false,
+      comments: [],
       video: {
         videoname: '',
         videourl: '',
@@ -103,7 +125,10 @@ export default {
             { title: '视频大小', value: this.video.videosize }
           ])
           if (isNotEmpty) {
-            const { status } = await updateVideo(this.video)
+            const { status } = await updateVideo({
+              id: row.id,
+              ...this.video
+            })
             this.$message({
               type: status ? 'success' : 'error',
               message: status ? '修改成功' : '修改失败'
@@ -121,6 +146,49 @@ export default {
     }
   },
   methods: {
+    delComment(row) {
+      this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.serviceLoading = this.$loading({
+          lock: true,
+          text: '正在删除中...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        return delComment(row.id)
+      }).then(rs => {
+        if (rs && rs.status) {
+          this.comments.splice(this.comments.findIndex(e => e.id === row.id), 1)
+          this.$message({
+            type: 'successs',
+            message: '删除成功'
+          })
+        }
+        this.serviceLoading.close()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+    },
+    closeComment() {
+      this.comments = []
+    },
+    seeComment(row) {
+      if (row.comments.length < 1) {
+        this.$message({
+          message: '该视频暂无评论',
+          type: 'warning'
+        })
+      } else {
+        this.comments = row.comments
+        this.commentShow = true
+      }
+    },
     isNotEmpty(array) {
       for (const items of array) {
         if (!items.value) {

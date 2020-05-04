@@ -213,7 +213,7 @@ export default {
               align='center'
               fixed='right'
               label='操作'
-              width='100'
+              width='150'
             >
               {
                 scope => (
@@ -224,7 +224,7 @@ export default {
                       })
                     }
                     <el-button type='text' size='small' onClick={() => this.handleClickEdit(scope.row)}>编辑</el-button>
-                    <el-button type='text' size='small' onClick={() => this.handleClickDelete(scope.row)}>删除</el-button>
+                    <el-button type='text' size='small' style='color:red;' onClick={() => this.handleClickDelete(scope.row)}>删除</el-button>
                   </el-row>
                 )
               }
@@ -261,7 +261,6 @@ export default {
         return (
           <el-pagination
             page-size={this.pages.pageSize}
-            pager-count={11}
             layout='prev, pager, next'
             total={this.pages.total}
             current-page={this.pages.currentPage}
