@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> // 视频管理评论管理的页面
     <commonJSX
       :config="config"
       :dialog-entiy="dialogEntiy"
