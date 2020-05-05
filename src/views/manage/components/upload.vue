@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> // 上传文件，上传图片组件操作
     <div class="upload">
       <el-upload
         ref="upload"
