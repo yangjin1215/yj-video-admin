@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> // banner管理页面
     <commonJSX
       :config="config"
       :no-pagination="true"
