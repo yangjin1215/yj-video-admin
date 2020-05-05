@@ -1,4 +1,5 @@
 <script>
+// 添加删除编辑的common组件
 export default {
   name: 'Common',
   props: {
