@@ -1,6 +1,6 @@
 <template>
   <div class="videotype">
-    <span class="label"><i red>*</i>视频类型标题/栏目名称：</span>
+    <span class="label"><i red>*</i>视频类型标题/栏目名称：</span>  // 栏目组件
     <el-input
       v-model="typename"
       placeholder="请输入视频类型标题/栏目名称"
