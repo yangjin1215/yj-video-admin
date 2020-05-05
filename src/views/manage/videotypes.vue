@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> // 视频栏目管理界面
     <commonJSX
       :config="config"
       :no-pagination="true"
