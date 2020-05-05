@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="row">
-      <span class="label"><i red>*</i>头图标题：</span>
+      <span class="label"><i red>*</i>头图标题：</span>  //banner组件
       <el-input
         v-model="bannerData.title"
         placeholder="请输入头图标题"

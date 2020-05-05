@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex upload">
-      <span class="label"><i red>*</i>上传视频：</span>
+      <span class="label"><i red>*</i>上传视频：</span>  //管理视频组件
       <upload
         v-model="innerValue.videourl"
         :config="videoConfig"

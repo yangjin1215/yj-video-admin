@@ -4,7 +4,8 @@
 
       <div class="title-container">
         <img src="/api/public/img/logo.png" width="100">
-        <h3 class="title">猿学网后台管理系统</h3>
+        <h3 class="title">猿学网后台管理系统</h3>  //管理员登录页面
+
       </div>
 
       <el-form-item prop="username">
