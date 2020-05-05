@@ -1,5 +1,5 @@
 <template>
-  <div class="user">
+  <div class="user"> // 用户管理界面
     <el-row class="tools-btn">
       <el-button type="primary" size="mini" @click="openAddUser">添加用户</el-button>
     </el-row>
